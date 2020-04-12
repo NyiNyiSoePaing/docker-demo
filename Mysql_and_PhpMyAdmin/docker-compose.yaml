@@ -1,0 +1,36 @@
+version : '3'
+
+networks:
+  Mysql_PhpMyadmin:
+     driver: bridge
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+    volumes:
+        - ./database:/var/lib/mysql
+    networks:
+        - Mysql_PhpMyadmin
+    ports:
+        - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      #PMA_ARBITRARY: 1
+    restart: always
+    networks:
+      - Mysql_PhpMyadmin
+    ports:
+      - 80:80
